@@ -50,11 +50,11 @@ jobs:
 
         #
         # THE REAL FIX:
-        # We run 'distclean' to force delete all old cached builds
-        # before we run the new 'debug' build.
+        # 'distclean' is a GLOBAL command, not an 'android' command.
+        # This will clear all global and local build caches.
         #
         echo "STEP 1: Deleting all old build caches..."
-        buildozer -v android distclean
+        buildozer -v distclean
 
         echo "STEP 2: Running the debug build..."
         buildozer -v android debug --log_level 2
