@@ -7,9 +7,9 @@ source.include_exts = py
 version = 0.1
 
 # 
-# THIS IS THE CRITICAL FIX:
-# We must use the 'webview' bootstrap, not 'sdl2'.
-# We also require 'android' instead of 'kivy'.
+# THE REAL FIX IS HERE:
+# 1. We require 'android', NOT 'kivy'.
+# 2. We set the 'bootstrap' to 'webview'.
 #
 requirements = python3,android
 bootstrap = webview
@@ -18,7 +18,7 @@ orientation = portrait
 fullscreen = 1
 android.permissions = INTERNET
 
-# SOLUTION: Use 'android.archs' for a modern, explicit build
+# We use 'android.archs' (plural) for a modern, explicit build
 android.archs = arm64-v8a
 
 # Stability settings (these are all still needed)

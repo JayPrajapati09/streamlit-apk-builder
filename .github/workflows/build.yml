@@ -22,7 +22,6 @@ jobs:
     - name: Install Buildozer dependencies
       run: |
         sudo apt-get update
-        # This install step already includes openjdk-17-jdk
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev cmake
 
     - name: Install Buildozer
@@ -31,21 +30,14 @@ jobs:
     - name: Install python-for-android dependencies
       run: pip install "cython==0.29.33" "jinja2"
 
-    - name: Run Buildozer with Corrected Environment
+    - name: Run Buildozer (Clean and Build)
       run: |
         echo "Forcing all NDK/SDK variables to point to the correct buildozer paths..."
         
-        #
-        # THIS IS THE NEW, CRITICAL FIX:
-        # We force the build to use Java 17, which is required by the Android Gradle plugin.
-        #
+        # Set all environment variables
         export JAVA_HOME="/usr/lib/jvm/temurin-17-jdk-amd64"
-        
-        # Set the correct SDK paths
         export ANDROID_HOME="/home/runner/.buildozer/android/platform/android-sdk"
         export ANDROID_SDK_ROOT="/home/runner/.buildozer/android/platform/android-sdk"
-        
-        # Set ALL NDK paths to our downloaded NDK (r25b)
         export ANDROID_NDK_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         export ANDROID_NDK="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         export ANDROID_NDK_ROOT="/home/runner/.buildozer/android/platform/android-ndk-r25b"
@@ -55,8 +47,16 @@ jobs:
         env | grep ANDROID
         echo "JAVA_HOME is: $JAVA_HOME"
         echo "-------------------------"
-        
-        echo "Running buildozer with log_level=2..."
+
+        #
+        # THE REAL FIX:
+        # We run 'distclean' to force delete all old cached builds
+        # before we run the new 'debug' build.
+        #
+        echo "STEP 1: Deleting all old build caches..."
+        buildozer -v android distclean
+
+        echo "STEP 2: Running the debug build..."
         buildozer -v android debug --log_level 2
 
     - name: Upload Artifact (APK)
