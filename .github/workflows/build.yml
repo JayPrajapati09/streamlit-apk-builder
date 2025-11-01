@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  workflow_dispatch: # Adds the "Run workflow" button
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-22.04 # Locks the stable OS
 
     steps:
     - name: Checkout code
@@ -39,17 +39,13 @@ jobs:
         export ANDROID_SDK_ROOT="/home/runner/.buildozer/android/platform/android-sdk"
         
         # Set ALL NDK paths to our downloaded NDK (r25b)
-        # This overwrites the system's bad default paths
         export ANDROID_NDK_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         export ANDROID_NDK="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         export ANDROID_NDK_ROOT="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         export ANDROID_NDK_LATEST_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         
         echo "--- Environment Check ---"
-        echo "ANDROID_HOME is: $ANDROID_HOME"
-        echo "ANDROID_NDK_HOME is: $ANDROID_NDK_HOME"
-        echo "ANDROID_NDK is: $ANDROID_NDK"
-        echo "ANDROID_NDK_ROOT is: $ANDROID_NDK_ROOT"
+        env | grep ANDROID
         echo "-------------------------"
         
         echo "Running buildozer with log_level=2..."
