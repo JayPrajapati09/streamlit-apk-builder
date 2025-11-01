@@ -30,7 +30,7 @@ jobs:
     - name: Install python-for-android dependencies
       run: pip install "cython==0.29.33" "jinja2"
 
-    - name: Run Buildozer with Corrected Environment
+    - name: Run Buildozer (Clean and Force Build)
       run: |
         echo "Forcing all NDK/SDK variables to point to the correct buildozer paths..."
         
@@ -40,18 +40,24 @@ jobs:
         
         # Set ALL NDK paths to our downloaded NDK (r25b)
         export ANDROID_NDK_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
-        
-        # THIS IS THE CORRECTED LINE:
         export ANDROID_NDK="/home/runner/.buildozer/android/platform/android-ndk-r25b"
-        
         export ANDROID_NDK_ROOT="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         export ANDROID_NDK_LATEST_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         
         echo "--- Environment Check ---"
         env | grep ANDROID
         echo "-------------------------"
+
+        # 
+        # THE REAL FIX IS HERE:
+        #
         
-        echo "Running buildozer with log_level=2..."
+        echo "STEP 1: Forcing a clean build to delete old cache..."
+        buildozer android clean
+
+        echo "STEP 2: Running the debug build again..."
+        # We run the debug command. This will re-read the spec file.
+        # If it fails, the log will show the *new* command.
         buildozer -v android debug --log_level 2
 
     - name: Upload Artifact (APK)
