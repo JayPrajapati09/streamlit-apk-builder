@@ -1,13 +1,16 @@
 name: Build Android APK
 
+# This adds a manual "Run workflow" button to the Actions tab
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # We lock the OS to a stable version
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
@@ -21,8 +24,8 @@ jobs:
     - name: Install Buildozer dependencies
       run: |
         sudo apt-get update
+        # This list is correct for ubuntu-22.04
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev cmake
-        sudo apt-get install -y libncurses5
 
     - name: Install Buildozer
       run: pip install buildozer
