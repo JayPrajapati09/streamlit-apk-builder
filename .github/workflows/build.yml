@@ -57,7 +57,7 @@ jobs:
         yes | buildozer -v distclean
 
         echo "STEP 2: Running the debug build..."
-        buildozer -v android debug --log_level 2
+        buildozer -v android debug --log-level=2
 
     - name: Upload Artifact (APK)
       uses: actions/upload-artifact@v4
