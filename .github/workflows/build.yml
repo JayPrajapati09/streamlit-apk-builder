@@ -33,11 +33,19 @@ jobs:
     - name: Install python-for-android dependencies
       run: pip install "cython==0.29.33" "jinja2"
 
-    - name: Unset conflicting NDK environment variables
+    - name: Force NDK r25b by removing system NDKs
       run: |
+        echo "Removing conflicting system NDKs..."
+        sudo rm -rf $ANDROID_NDK_HOME
+        sudo rm -rf $ANDROID_NDK_ROOT
+        sudo rm -rf $ANDROID_NDK_LATEST_HOME
+        
+        # Unset the variables just in case
         unset ANDROID_NDK_HOME
         unset ANDROID_NDK_ROOT
         unset ANDROID_NDK_LATEST_HOME
+        
+        echo "System NDKs removed."
 
     - name: Run Buildozer
       run: buildozer android debug
