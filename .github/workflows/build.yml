@@ -30,21 +30,27 @@ jobs:
     - name: Install python-for-android dependencies
       run: pip install "cython==0.29.33" "jinja2"
 
-    - name: Run Buildozer with explicit environment
+    - name: Run Buildozer with Corrected Environment
       run: |
-        echo "Removing conflicting system NDKs..."
-        sudo rm -rf $ANDROID_NDK_HOME
-        sudo rm -rf $ANDROID_NDK_ROOT
-        sudo rm -rf $ANDROID_NDK_LATEST_HOME
+        echo "Forcing all NDK/SDK variables to point to the correct buildozer paths..."
         
-        echo "Forcing correct environment variables for build..."
+        # Set the correct SDK paths
         export ANDROID_HOME="/home/runner/.buildozer/android/platform/android-sdk"
-        export ANDROID_NDK_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        export ANDROID_SDK_ROOT="/home/runner/.buildozer/android/platform/android-sdk"
         
-        # Unset all other conflicting variables
-        unset ANDROID_NDK
-        unset ANDROID_NDK_ROOT
-        unset ANDROID_NDK_LATEST_HOME
+        # Set ALL NDK paths to our downloaded NDK (r25b)
+        # This overwrites the system's bad default paths
+        export ANDROID_NDK_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        export ANDROID_NDK="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        export ANDROID_NDK_ROOT="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        export ANDROID_NDK_LATEST_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        
+        echo "--- Environment Check ---"
+        echo "ANDROID_HOME is: $ANDROID_HOME"
+        echo "ANDROID_NDK_HOME is: $ANDROID_NDK_HOME"
+        echo "ANDROID_NDK is: $ANDROID_NDK"
+        echo "ANDROID_NDK_ROOT is: $ANDROID_NDK_ROOT"
+        echo "-------------------------"
         
         echo "Running buildozer with log_level=2..."
         buildozer -v android debug --log_level 2
