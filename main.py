@@ -1,5 +1,5 @@
 from android import load_url
 
-# The webview bootstrap will automatically create the
-# WebView and just run this one line of code.
+# This is the correct code for the 'webview' bootstrap.
+# It will automatically create the WebView and load this URL.
 load_url("https://google.com")
