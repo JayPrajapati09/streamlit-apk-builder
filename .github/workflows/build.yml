@@ -33,6 +33,12 @@ jobs:
     - name: Install python-for-android dependencies
       run: pip install "cython==0.29.33" "jinja2"
 
+    - name: Unset conflicting NDK environment variables
+      run: |
+        unset ANDROID_NDK_HOME
+        unset ANDROID_NDK_ROOT
+        unset ANDROID_NDK_LATEST_HOME
+
     - name: Run Buildozer
       run: buildozer android debug
 
