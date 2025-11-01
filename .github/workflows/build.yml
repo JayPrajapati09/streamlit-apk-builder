@@ -3,7 +3,7 @@ name: Build Android APK
 on:
   push:
     branches:
-      - main  # Or whatever your default branch is
+      - main
 
 jobs:
   build:
@@ -16,13 +16,21 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9' # Use a specific Python version
+        python-version: '3.9'
 
-    - name: Build with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
-      with:
-        command: buildozer android debug
-        buildozer_version: stable
+    - name: Install Buildozer dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+
+    - name: Install Buildozer
+      run: pip install buildozer
+
+    - name: Install python-for-android dependencies
+      run: pip install "cython==0.29.33" "jinja2"
+
+    - name: Run Buildozer
+      run: buildozer android debug
 
     - name: Upload Artifact (APK)
       uses: actions/upload-artifact@v4
