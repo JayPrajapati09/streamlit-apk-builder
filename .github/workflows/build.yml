@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Adds the "Run workflow" button
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04 # Locks the stable OS
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout code
@@ -40,7 +40,10 @@ jobs:
         
         # Set ALL NDK paths to our downloaded NDK (r25b)
         export ANDROID_NDK_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        
+        # THIS IS THE CORRECTED LINE:
         export ANDROID_NDK="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        
         export ANDROID_NDK_ROOT="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         export ANDROID_NDK_LATEST_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
         
