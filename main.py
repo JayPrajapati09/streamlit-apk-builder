@@ -35,7 +35,7 @@ def main():
     webview.getSettings().setDomStorageEnabled(True)
     webview.getSettings().setUseWideViewPort(True)
     webview.getSettings().setLoadWithOverviewMode(True)
-
+    #
     # Load the URL
     webview.loadUrl(APP_URL)
     
