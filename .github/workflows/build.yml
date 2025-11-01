@@ -1,6 +1,5 @@
 name: Build Android APK
 
-# This adds a manual "Run workflow" button to the Actions tab
 on:
   push:
     branches:
@@ -9,7 +8,6 @@ on:
 
 jobs:
   build:
-    # We lock the OS to a stable version
     runs-on: ubuntu-22.04
 
     steps:
@@ -24,7 +22,6 @@ jobs:
     - name: Install Buildozer dependencies
       run: |
         sudo apt-get update
-        # This list is correct for ubuntu-22.04
         sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libffi-dev libssl-dev cmake
 
     - name: Install Buildozer
@@ -33,22 +30,24 @@ jobs:
     - name: Install python-for-android dependencies
       run: pip install "cython==0.29.33" "jinja2"
 
-    - name: Force NDK r25b by removing system NDKs
+    - name: Run Buildozer with explicit environment
       run: |
         echo "Removing conflicting system NDKs..."
         sudo rm -rf $ANDROID_NDK_HOME
         sudo rm -rf $ANDROID_NDK_ROOT
         sudo rm -rf $ANDROID_NDK_LATEST_HOME
         
-        # Unset the variables just in case
-        unset ANDROID_NDK_HOME
+        echo "Forcing correct environment variables for build..."
+        export ANDROID_HOME="/home/runner/.buildozer/android/platform/android-sdk"
+        export ANDROID_NDK_HOME="/home/runner/.buildozer/android/platform/android-ndk-r25b"
+        
+        # Unset all other conflicting variables
+        unset ANDROID_NDK
         unset ANDROID_NDK_ROOT
         unset ANDROID_NDK_LATEST_HOME
         
-        echo "System NDKs removed."
-
-    - name: Run Buildozer
-      run: buildozer android debug
+        echo "Running buildozer with log_level=2..."
+        buildozer -v android debug --log_level 2
 
     - name: Upload Artifact (APK)
       uses: actions/upload-artifact@v4
