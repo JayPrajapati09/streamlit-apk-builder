@@ -19,3 +19,4 @@ android.p4a.recipes = webview
 
 android.ndk = 25b
 android.build_tools = 31.0.0
+android.accept_sdk_license = True
